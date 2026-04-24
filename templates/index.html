@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>FocusFlow</title>
+    <style>
+    body {
+        font-family: Arial;
+        text-align: center;
+        margin-top: 50px;
+    }
+    input, select, button {
+        padding: 10px;
+        margin: 10px;
+        width: 200px;
+    }
+    button {
+        background-color: black;
+        color: white;
+        border: none;
+    }
+</style>
+</head>
+<body>
+    <h1>FocusFlow - Smart Study Planner</h1>
+
+    <form method="POST">
+        <input type="text" name="task" placeholder="Enter your task" required><br><br>
+
+        <input type="number" name="hours" placeholder="Available hours" required><br><br>
+
+        <select name="energy">
+            <option value="low">Low Energy</option>
+            <option value="medium">Medium Energy</option>
+            <option value="high">High Energy</option>
+        </select><br><br>
+
+        <button type="submit">Generate Plan</button>
+    </form>
+
+    <pre>{{ output }}</pre>
+</body>
+</html>
