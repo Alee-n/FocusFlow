@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>FocusFlow</title>
 
@@ -18,10 +19,12 @@
             margin: 40px auto;
             width: 380px;
             border-radius: 12px;
-            box-shadow: 0px 6px 20px rgba(0,0,0,0.2);
+            box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.2);
         }
 
-        input, select, button {
+        input,
+        select,
+        button {
             padding: 10px;
             margin: 8px;
             width: 90%;
@@ -54,124 +57,165 @@
         ul {
             text-align: left;
         }
-
     </style>
 </head>
 
 <body>
 
-<h1>FocusFlow - Smart Productivity Planner</h1>
+    <h1>FocusFlow - Smart Productivity Planner</h1>
 
-<div class="container">
-
-    <form method="POST">
-
-        <label>Task Type:</label><br>
-        <select name="task">
-            <option value="study">Study</option>
-            <option value="work">Work</option>
-        </select>
-
-        <label>Available Time (minutes):</label><br>
-        <input type="number" name="time" required>
-
-        <label>Energy Level:</label><br>
-        <select name="energy">
-            <option value="low">Low</option>
-            <option value="medium">Medium</option>
-            <option value="high">High</option>
-        </select>
-
-        <label>Plan Mode:</label><br>
-        <select name="mode">
-            <option value="ai">AI Plan</option>
-            <option value="smart">Smart Plan</option>
-        </select>
-
-        <button type="submit">Generate Plan</button>
-
-    </form>
-
-    <!-- 📊 Analytics -->
-    <p><b>📊 Total Sessions:</b> {{ total }}</p>
-    <p><b>📈 Completion:</b> {{ percent }}%</p>
-
-    {% if result %}
-
-    <h2>🧠 Your Focus Plan</h2>
-
-    <p><b>📌 Task:</b> {{ result.task }}</p>
-    <p><b>⚡ Score:</b> {{ result.score }}</p>
-
-    <p><b>🔥 Motivation:</b>
-        {% if result.score == "AI" %}
-            AI personalized plan for your energy level
-        {% else %}
-            Stay consistent and focused
-        {% endif %}
+    <p>
+        Welcome,
+        <b>{{ username }}</b>
     </p>
 
-    <h4>📅 Schedule:</h4>
+    <a href="/logout">
+        Logout
+    </a>
 
-    {% for item in result.plan %}
+    <div class="container">
+
+        <form method="POST">
+
+            <label>Task Type:</label><br>
+            <select name="task">
+                <option value="study">Study</option>
+                <option value="work">Work</option>
+            </select>
+
+            <label>Available Time (minutes):</label><br>
+            <input type="number" name="time" required>
+
+            <label>Energy Level:</label><br>
+            <select name="energy">
+                <option value="low">Low</option>
+                <option value="medium">Medium</option>
+                <option value="high">High</option>
+            </select>
+
+            <label>Plan Mode:</label><br>
+            <select name="mode">
+                <option value="ai">AI Plan</option>
+                <option value="smart">Smart Plan</option>
+            </select>
+
+            <button type="submit">Generate Plan</button>
+
+        </form>
+
+        <!-- 📊 Analytics -->
+        <p><b>📊 Total Sessions:</b> {{ total }}</p>
+        <p><b>📈 Completion:</b> {{ percent }}%</p>
+
+        {% if result %}
+
+        <h2>🧠 Your Focus Plan</h2>
+
+        <p><b>📌 Task:</b> {{ result.task }}</p>
+        <p><b>⚡ Score:</b> {{ result.score }}</p>
+
+        <p><b>🔥 Motivation:</b>
+            {% if result.score == "AI" %}
+            AI personalized plan for your energy level
+            {% else %}
+            Stay consistent and focused
+            {% endif %}
+        </p>
+
+        <h4>📅 Schedule:</h4>
+
+        {% for item in result.plan %}
         <input type="checkbox" class="session"> {{ item }}<br>
-    {% endfor %}
+        {% endfor %}
 
-    <br>
+        <br>
 
-    <!-- Progress Bar -->
-    <div class="progress-container">
-        <div id="progressBar"></div>
+        <!-- Progress Bar -->
+        <div class="progress-container">
+            <div id="progressBar"></div>
+        </div>
+
+        <p id="progressText">0% completed</p>
+
+        <!-- Timer -->
+        <button onclick="startTimer()">Start Focus Timer</button>
+        <p id="timerDisplay">00:00</p>
+
+        {% endif %}
+
+        <hr>
+
+        <h2>📊 Your Session History</h2>
+
+        {% if history %}
+
+        <ul>
+
+            {% for item in history %}
+
+            <li>
+
+                <b>{{ item[0] }}</b>
+                -
+                {{ item[1] }} mins
+                -
+                {{ item[2] }} energy
+                -
+                {{ item[3] }} mode
+
+            </li>
+
+            {% endfor %}
+
+        </ul>
+
+        {% else %}
+
+        <p>No sessions yet.</p>
+
+        {% endif %}
+
     </div>
 
-    <p id="progressText">0% completed</p>
+    <script>
+        // ---------- PROGRESS TRACKER ----------
+        function updateProgress() {
+            let sessions = document.querySelectorAll(".session");
+            let checked = document.querySelectorAll(".session:checked");
 
-    <!-- Timer -->
-    <button onclick="startTimer()">Start Focus Timer</button>
-    <p id="timerDisplay">00:00</p>
+            let percent = (checked.length / sessions.length) * 100;
 
-    {% endif %}
-
-</div>
-
-<script>
-// ---------- PROGRESS TRACKER ----------
-function updateProgress() {
-    let sessions = document.querySelectorAll(".session");
-    let checked = document.querySelectorAll(".session:checked");
-
-    let percent = (checked.length / sessions.length) * 100;
-
-    document.getElementById("progressBar").style.width = percent + "%";
-    document.getElementById("progressText").innerText = Math.round(percent) + "% completed";
-}
-
-document.addEventListener("change", function(e){
-    if(e.target.classList.contains("session")){
-        updateProgress();
-    }
-});
-
-// ---------- TIMER ----------
-function startTimer() {
-    let time = 20 * 60;
-    let display = document.getElementById("timerDisplay");
-
-    let interval = setInterval(() => {
-        let min = Math.floor(time / 60);
-        let sec = time % 60;
-
-        display.innerText = `${min}:${sec < 10 ? "0" : ""}${sec}`;
-
-        time--;
-
-        if (time < 0) {
-            clearInterval(interval);
-            alert("Break time!");
+            document.getElementById("progressBar").style.width = percent + "%";
+            document.getElementById("progressText").innerText = Math.round(percent) + "% completed";
         }
-    }, 1000);
-}
-</script>
+
+        document.addEventListener("change", function (e) {
+            if (e.target.classList.contains("session")) {
+                updateProgress();
+            }
+        });
+
+        // ---------- TIMER ----------
+        function startTimer() {
+            let time = 20 * 60;
+            let display = document.getElementById("timerDisplay");
+
+            let interval = setInterval(() => {
+                let min = Math.floor(time / 60);
+                let sec = time % 60;
+
+                display.innerText = `${min}:${sec < 10 ? "0" : ""}${sec}`;
+
+                time--;
+
+                if (time < 0) {
+                    clearInterval(interval);
+                    alert("Break time!");
+                }
+            }, 1000);
+        }
+    </script>
 
 </body>
+
 </html>
