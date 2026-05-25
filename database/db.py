@@ -1,9 +1,15 @@
-import sqlite3
+import psycopg2
 
 
 def connect_db():
 
-    connection = sqlite3.connect("focusflow.db")
+    connection = psycopg2.connect(
+        host="localhost",
+        database="focusflow",
+        user="postgres",
+        password="aleen003",
+        port="5432",
+    )
 
     return connection
 
@@ -18,7 +24,7 @@ def create_tables():
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS users (
 
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id SERIAL PRIMARY KEY,
 
             username TEXT UNIQUE,
 
@@ -30,7 +36,7 @@ def create_tables():
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS sessions (
 
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id SERIAL PRIMARY KEY,
 
             username TEXT,
 
@@ -63,7 +69,7 @@ def create_user(username, password):
         INSERT INTO users
         (username, password)
 
-        VALUES (?, ?)
+        VALUES (%s, %s)
         """,
         (username, password),
     )
@@ -82,7 +88,7 @@ def get_user(username):
     cursor.execute(
         """
         SELECT * FROM users
-        WHERE username = ?
+        WHERE username = %s
         """,
         (username,),
     )
@@ -108,7 +114,7 @@ def save_session(username, task, time, energy, mode):
         INSERT INTO sessions
         (username, task, time, energy, mode)
 
-        VALUES (?, ?, ?, ?, ?)
+        VALUES (%s, %s, %s, %s, %s)
         """,
         (username, task, time, energy, mode),
     )
@@ -143,7 +149,7 @@ def get_user_sessions(username):
         """
         SELECT task, time, energy, mode
         FROM sessions
-        WHERE username = ?
+        WHERE username = %s
         """,
         (username,),
     )
@@ -165,7 +171,7 @@ def get_user_total_sessions(username):
         """
         SELECT COUNT(*)
         FROM sessions
-        WHERE username = ?
+        WHERE username = %s
         """,
         (username,),
     )
