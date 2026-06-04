@@ -9,6 +9,10 @@ from services.planner_service import generate_plan
 from database.db import save_session
 from database.db import get_user_total_sessions
 from database.db import get_user_sessions
+from database.db import get_total_focus_time
+from database.db import get_average_session_time
+from database.db import get_most_common_energy
+from database.db import get_most_used_mode
 
 main = Blueprint("main", __name__)
 
@@ -40,6 +44,14 @@ def home():
 
     total = get_user_total_sessions(username)
 
+    focus_time = get_total_focus_time(username)
+
+    average_time = get_average_session_time(username)
+
+    common_energy = get_most_common_energy(username)
+
+    common_mode = get_most_used_mode(username)
+
     history = get_user_sessions(username)
 
     percent = 0
@@ -51,4 +63,8 @@ def home():
         percent=percent,
         history=history,
         username=username,
+        focus_time=focus_time,
+        average_time=average_time,
+        common_energy=common_energy,
+        common_mode=common_mode,
     )

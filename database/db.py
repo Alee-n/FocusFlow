@@ -22,15 +22,19 @@ def create_tables():
 
     # ---------- USERS TABLE ----------
     cursor.execute("""
-        CREATE TABLE IF NOT EXISTS users (
+    CREATE TABLE IF NOT EXISTS users (
 
-            id SERIAL PRIMARY KEY,
+        id SERIAL PRIMARY KEY,
 
-            username TEXT UNIQUE,
+        username TEXT UNIQUE,
 
-            password TEXT
-        )
-        """)
+        email TEXT UNIQUE,
+
+        password_hash TEXT,
+
+        role TEXT DEFAULT 'user'
+    )
+    """)
 
     # ---------- SESSIONS TABLE ----------
     cursor.execute("""
@@ -58,7 +62,7 @@ def create_tables():
 # ---------- USER FUNCTIONS ----------
 
 
-def create_user(username, password):
+def create_user(username, email, password_hash):
 
     connection = connect_db()
 
@@ -67,38 +71,16 @@ def create_user(username, password):
     cursor.execute(
         """
         INSERT INTO users
-        (username, password)
+        (username, email, password_hash)
 
-        VALUES (%s, %s)
+        VALUES (%s, %s, %s)
         """,
-        (username, password),
+        (username, email, password_hash),
     )
 
     connection.commit()
 
     connection.close()
-
-
-def get_user(username):
-
-    connection = connect_db()
-
-    cursor = connection.cursor()
-
-    cursor.execute(
-        """
-        SELECT * FROM users
-        WHERE username = %s
-        """,
-        (username,),
-    )
-
-    user = cursor.fetchone()
-
-    connection.close()
-
-    return user
-
 
 # ---------- SESSION FUNCTIONS ----------
 
@@ -181,3 +163,135 @@ def get_user_total_sessions(username):
     connection.close()
 
     return total
+
+def get_user_by_username(username):
+
+    connection = connect_db()
+
+    cursor = connection.cursor()
+
+    cursor.execute(
+        """
+        SELECT *
+        FROM users
+        WHERE username = %s
+        """,
+        (username,),
+    )
+
+    user = cursor.fetchone()
+
+    connection.close()
+
+    return user
+
+def get_user_by_email(email):
+
+    connection = connect_db()
+
+    cursor = connection.cursor()
+
+    cursor.execute(
+        """
+        SELECT *
+        FROM users
+        WHERE email = %s
+        """,
+        (email,),
+    )
+
+    user = cursor.fetchone()
+
+    connection.close()
+
+    return user
+
+def get_total_focus_time(username):
+
+    connection = connect_db()
+
+    cursor = connection.cursor()
+
+    cursor.execute(
+        """
+        SELECT COALESCE(SUM(time), 0)
+        FROM sessions
+        WHERE username = %s
+        """,
+        (username,),
+    )
+
+    total = cursor.fetchone()[0]
+
+    connection.close()
+
+    return total
+
+def get_average_session_time(username):
+
+    connection = connect_db()
+
+    cursor = connection.cursor()
+
+    cursor.execute(
+        """
+        SELECT COALESCE(AVG(time), 0)
+        FROM sessions
+        WHERE username = %s
+        """,
+        (username,),
+    )
+
+    average = cursor.fetchone()[0]
+
+    connection.close()
+
+    return round(float(average), 2)
+
+def get_most_common_energy(username):
+
+    connection = connect_db()
+
+    cursor = connection.cursor()
+
+    cursor.execute(
+        """
+        SELECT energy
+        FROM sessions
+        WHERE username = %s
+        GROUP BY energy
+        ORDER BY COUNT(*) DESC
+        LIMIT 1
+        """,
+        (username,),
+    )
+
+    result = cursor.fetchone()
+
+    connection.close()
+
+    return result[0] if result else "N/A"
+
+def get_most_used_mode(username):
+
+    connection = connect_db()
+
+    cursor = connection.cursor()
+
+    cursor.execute(
+        """
+        SELECT mode
+        FROM sessions
+        WHERE username = %s
+        GROUP BY mode
+        ORDER BY COUNT(*) DESC
+        LIMIT 1
+        """,
+        (username,),
+    )
+
+    result = cursor.fetchone()
+
+    connection.close()
+
+    return result[0] if result else "N/A"

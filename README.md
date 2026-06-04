@@ -64,35 +64,28 @@ https://focusflow-6dz0.onrender.com
 ![Analytics](screenshots/history.png)
 
 ---
-
 ## Tech Stack
 
 ### Backend
-
-* Python
-* Flask
-* PostgreSQL
-* psycopg2
+- Python
+- Flask
+- PostgreSQL
 
 ### Authentication
-
-* Flask-JWT-Extended
+- JWT (Flask-JWT-Extended)
 
 ### DevOps
-
-* Docker
-* Docker Compose
-* GitHub Actions
+- Docker
+- Docker Compose
+- GitHub Actions
 
 ### Testing
-
-* pytest
+- pytest
 
 ### Frontend
-
-* HTML
-* CSS
-* JavaScript
+- HTML
+- CSS
+- JavaScript
 
 ---
 

@@ -3,7 +3,7 @@ from flask import Blueprint, render_template, request, redirect, session
 from werkzeug.security import generate_password_hash
 from werkzeug.security import check_password_hash
 
-from database.db import create_user, get_user
+from database.db import (create_user,get_user_by_username,get_user_by_email,)
 
 auth = Blueprint("auth", __name__)
 
@@ -16,11 +16,25 @@ def register():
 
         username = request.form["username"]
 
+        email = request.form["email"]
+
         password = request.form["password"]
 
         hashed_password = generate_password_hash(password)
 
-        create_user(username, hashed_password)
+        existing_user = get_user_by_username(username)
+
+        if existing_user:
+
+            return "Username already exists"
+
+        existing_email = get_user_by_email(email)
+
+        if existing_email:
+
+            return "Email already exists"
+
+        create_user(username,email,hashed_password)
 
         return redirect("/login")
 
@@ -37,9 +51,9 @@ def login():
 
         password = request.form["password"]
 
-        user = get_user(username)
+        user = get_user_by_username(username)
 
-        if user and check_password_hash(user[2], password):
+        if user and check_password_hash(user[3], password):
 
             session["user"] = username
 

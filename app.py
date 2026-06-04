@@ -1,3 +1,4 @@
+import os
 from flask import Flask
 from routes.api_routes import api
 from routes.main_routes import main
@@ -6,13 +7,13 @@ from dotenv import load_dotenv
 from database.db import create_tables
 from flask_jwt_extended import JWTManager
 
+load_dotenv()
+
 app = Flask(__name__)
 
-app.config["JWT_SECRET_KEY"] = "super-secret-key"
+app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY")
 
 jwt = JWTManager(app)
-
-load_dotenv()
 
 app.secret_key = "focusflow_secret_key"
 
