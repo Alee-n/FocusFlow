@@ -295,3 +295,25 @@ def get_most_used_mode(username):
     connection.close()
 
     return result[0] if result else "N/A"
+
+def get_session_chart_data(username):
+
+    connection = connect_db()
+
+    cursor = connection.cursor()
+
+    cursor.execute(
+        """
+        SELECT time
+        FROM sessions
+        WHERE username = %s
+        ORDER BY id
+        """,
+        (username,),
+    )
+
+    data = cursor.fetchall()
+
+    connection.close()
+
+    return [row[0] for row in data]

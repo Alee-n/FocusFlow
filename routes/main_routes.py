@@ -5,7 +5,7 @@ from flask import session
 from flask import redirect
 
 from services.planner_service import generate_plan
-
+from database.db import get_session_chart_data
 from database.db import save_session
 from database.db import get_user_total_sessions
 from database.db import get_user_sessions
@@ -54,6 +54,8 @@ def home():
 
     history = get_user_sessions(username)
 
+    chart_data = get_session_chart_data(username)
+
     percent = 0
 
     return render_template(
@@ -62,6 +64,7 @@ def home():
         total=total,
         percent=percent,
         history=history,
+        chart_data=chart_data,
         username=username,
         focus_time=focus_time,
         average_time=average_time,

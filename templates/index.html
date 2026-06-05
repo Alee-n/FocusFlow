@@ -57,7 +57,144 @@
         ul {
             text-align: left;
         }
+
+        .schedule-item {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin: 10px 0;
+        }
+
+        .timer-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .timer-circle {
+            position: relative;
+            width: 220px;
+            height: 220px;
+        }
+
+        .timer-circle svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        #timerDisplay {
+            position: absolute;
+            width: 100%;
+            text-align: center;
+
+            top: 85px;
+            left: 0;
+
+            font-size: 34px;
+            font-weight: bold;
+
+            color: #333;
+        }
+
+        .timer-controls {
+            position: absolute;
+
+            width: 100%;
+
+            top: 135px;
+            left: 0;
+
+            display: flex;
+            justify-content: center;
+
+            gap: 20px;
+        }
+
+        .timer-controls span {
+            cursor: pointer;
+
+            font-size: 22px;
+
+            transition: 0.2s;
+        }
+
+        .timer-controls span:hover {
+            transform: scale(1.2);
+        }
+
+        .container {
+            width: 1200px;
+            max-width: 95%;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .dashboard-card {
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: white;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: #666;
+        }
+
+        .history-section {
+            margin-top: 25px;
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 12px;
+            color: black;
+        }
+
+        .schedule-card {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: white;
+            padding: 10px;
+            margin-bottom: 8px;
+            border-radius: 8px;
+        }
+
+        .schedule-text {
+            flex: 1;
+            text-align: left;
+        }
+        
     </style>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 </head>
 
 <body>
@@ -75,151 +212,237 @@
 
     <div class="container">
 
-        <form method="POST">
+        <div class="dashboard-grid">
 
-            <label>Task Type:</label><br>
-            <select name="task">
-                <option value="study">Study</option>
-                <option value="work">Work</option>
-            </select>
-
-            <label>Available Time (minutes):</label><br>
-            <input type="number" name="time" required>
-
-            <label>Energy Level:</label><br>
-            <select name="energy">
-                <option value="low">Low</option>
-                <option value="medium">Medium</option>
-                <option value="high">High</option>
-            </select>
-
-            <label>Plan Mode:</label><br>
-            <select name="mode">
-                <option value="ai">AI Plan</option>
-                <option value="smart">Smart Plan</option>
-            </select>
-
-            <button type="submit">Generate Plan</button>
-
-        </form>
-
-        <!-- 📊 Analytics -->
-        <p><b>📊 Total Sessions:</b> {{ total }}</p>
-        <p><b>📈 Completion:</b> {{ percent }}%</p>
-        <p><b>⏱ Total Focus Time:</b> {{ focus_time }} mins</p>
-        <p><b>📏 Average Session:</b> {{ average_time }} mins</p>
-        <p><b>⚡ Most Common Energy:</b> {{ common_energy }}</p>
-        <p><b>🧠 Most Used Mode:</b> {{ common_mode }}</p>
-
-
-        {% if result %}
-
-        <h2>🧠 Your Focus Plan</h2>
-
-        <p><b>📌 Task:</b> {{ result.task }}</p>
-        <p><b>⚡ Score:</b> {{ result.score }}</p>
-
-        <p><b>🔥 Motivation:</b>
-            {% if result.score == "AI" %}
-            AI personalized plan for your energy level
-            {% else %}
-            Stay consistent and focused
-            {% endif %}
-        </p>
-
-        <h4>📅 Schedule:</h4>
-
-        {% for item in result.plan %}
-        <input type="checkbox" class="session"> {{ item }}<br>
-        {% endfor %}
-
-        <br>
-
-        <!-- Progress Bar -->
-        <div class="progress-container">
-            <div id="progressBar"></div>
+            <!-- PLAN CARD -->
+            <div class="dashboard-card">
+        
+                <h2>📝 Generate Plan</h2>
+        
+                <form method="POST">
+        
+                    <label>Task Type:</label><br>
+                    <select name="task">
+                        <option value="study">Study</option>
+                        <option value="work">Work</option>
+                    </select>
+        
+                    <label>Available Time (minutes):</label><br>
+                    <input type="number" name="time" required>
+        
+                    <label>Energy Level:</label><br>
+                    <select name="energy">
+                        <option value="low">Low</option>
+                        <option value="medium">Medium</option>
+                        <option value="high">High</option>
+                    </select>
+        
+                    <label>Plan Mode:</label><br>
+                    <select name="mode">
+                        <option value="ai">AI Plan</option>
+                        <option value="smart">Smart Plan</option>
+                    </select>
+        
+                    <button type="submit">Generate Plan</button>
+        
+                </form>
+        
+                {% if result %}
+        
+                <hr>
+        
+                <h3>🧠 Your Focus Plan</h3>
+        
+                <p><b>📌 Task:</b> {{ result.task }}</p>
+        
+                <p><b>⚡ Score:</b> {{ result.score }}</p>
+        
+                <p>
+                    <b>🔥 Motivation:</b>
+        
+                    {% if result.score == "AI" %}
+                    AI personalized plan for your energy level
+                    {% else %}
+                    Stay consistent and focused
+                    {% endif %}
+                </p>
+        
+                <h4>📅 Schedule</h4>
+        
+                <div class="schedule-list">
+        
+                    {% for item in result.plan %}
+        
+                    <div class="schedule-card">
+        
+                        <input type="checkbox" class="session">
+        
+                        <div class="schedule-text">
+        
+                            {{ item }}
+        
+                        </div>
+        
+                    </div>
+        
+                    {% endfor %}
+        
+                </div>
+        
+                <div class="progress-container">
+        
+                    <div id="progressBar"></div>
+        
+                </div>
+        
+                <p id="progressText">0% completed</p>
+        
+                {% endif %}
+        
+            </div>
+        
+            <!-- ANALYTICS CARD -->
+        
+            <div class="dashboard-card">
+        
+                <h2>📈 Analytics</h2>
+        
+                <div class="stats-grid">
+        
+                    <div class="stat-card">
+                        <div class="stat-number">{{ total }}</div>
+                        <div class="stat-label">Sessions</div>
+                    </div>
+        
+                    <div class="stat-card">
+                        <div class="stat-number">{{ focus_time }}</div>
+                        <div class="stat-label">Minutes</div>
+                    </div>
+        
+                    <div class="stat-card">
+                        <div class="stat-number">{{ average_time }}</div>
+                        <div class="stat-label">Average</div>
+                    </div>
+        
+                    <div class="stat-card">
+                        <div class="stat-number">{{ common_mode }}</div>
+                        <div class="stat-label">Mode</div>
+                    </div>
+        
+                </div>
+        
+                <div style="height:320px;">
+        
+                    <canvas
+                        id="focusChart"
+                        data-chart='{{ chart_data|tojson }}'>
+                    </canvas>
+        
+                </div>
+        
+            </div>
+        
+            <!-- TIMER CARD -->
+        
+            <div class="dashboard-card">
+        
+                <h2>⏱ Focus Timer</h2>
+        
+                <div class="timer-container">
+        
+                    <div class="timer-circle">
+        
+                        <svg width="220" height="220">
+        
+                            <circle
+                                cx="110"
+                                cy="110"
+                                r="95"
+                                stroke="#ddd"
+                                stroke-width="10"
+                                fill="none">
+                            </circle>
+        
+                            <circle
+                                id="progressCircle"
+                                cx="110"
+                                cy="110"
+                                r="95"
+                                stroke="#5c6bc0"
+                                stroke-width="10"
+                                fill="none"
+                                stroke-dasharray="597"
+                                stroke-dashoffset="0"
+                                transform="rotate(-90 110 110)">
+                            </circle>
+        
+                        </svg>
+        
+                        <div id="timerDisplay">20:00</div>
+        
+                        <div class="timer-controls">
+        
+                            <span onclick="startTimer()">▶</span>
+        
+                            <span onclick="pauseTimer()">⏸</span>
+        
+                            <span onclick="resetTimer()">🔄</span>
+        
+                        </div>
+        
+                    </div>
+        
+                </div>
+        
+            </div>
+        
         </div>
-
-        <p id="progressText">0% completed</p>
-
-        <!-- Timer -->
-        <button onclick="startTimer()">Start Focus Timer</button>
-        <p id="timerDisplay">00:00</p>
-
-        {% endif %}
-
-        <hr>
-
-        <h2>📊 Your Session History</h2>
-
-        {% if history %}
-
-        <ul>
-
-            {% for item in history %}
-
-            <li>
-
-                <b>{{ item[0] }}</b>
-                -
-                {{ item[1] }} mins
-                -
-                {{ item[2] }} energy
-                -
-                {{ item[3] }} mode
-
-            </li>
-
-            {% endfor %}
-
-        </ul>
-
-        {% else %}
-
-        <p>No sessions yet.</p>
-
-        {% endif %}
+        
+        <div class="history-section">
+        
+            <h2>📚 Session History</h2>
+        
+            {% if history %}
+        
+            <ul>
+        
+                {% for item in history %}
+        
+                <li>
+        
+                    <b>{{ item[0] }}</b>
+        
+                    -
+        
+                    {{ item[1] }} mins
+        
+                    -
+        
+                    {{ item[2] }} energy
+        
+                    -
+        
+                    {{ item[3] }} mode
+        
+                </li>
+        
+                {% endfor %}
+        
+            </ul>
+        
+            {% else %}
+        
+            <p>No sessions yet.</p>
+        
+            {% endif %}
+        
+        </div>
 
     </div>
 
-    <script>
-        // ---------- PROGRESS TRACKER ----------
-        function updateProgress() {
-            let sessions = document.querySelectorAll(".session");
-            let checked = document.querySelectorAll(".session:checked");
+    <script src="{{ url_for('static', filename='js/timer.js') }}"></script>
 
-            let percent = (checked.length / sessions.length) * 100;
-
-            document.getElementById("progressBar").style.width = percent + "%";
-            document.getElementById("progressText").innerText = Math.round(percent) + "% completed";
-        }
-
-        document.addEventListener("change", function (e) {
-            if (e.target.classList.contains("session")) {
-                updateProgress();
-            }
-        });
-
-        // ---------- TIMER ----------
-        function startTimer() {
-            let time = 20 * 60;
-            let display = document.getElementById("timerDisplay");
-
-            let interval = setInterval(() => {
-                let min = Math.floor(time / 60);
-                let sec = time % 60;
-
-                display.innerText = `${min}:${sec < 10 ? "0" : ""}${sec}`;
-
-                time--;
-
-                if (time < 0) {
-                    clearInterval(interval);
-                    alert("Break time!");
-                }
-            }, 1000);
-        }
-    </script>
+    <script src="{{ url_for('static', filename='js/chart.js') }}"></script>
 
 </body>
 
