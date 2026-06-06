@@ -1,0 +1,454 @@
+/* ---------- GLOBAL ---------- */
+
+body {
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    margin: 0;
+    padding: 0;
+    color: #333;
+}
+
+h1, h2, h3 {
+    margin-top: 0;
+}
+
+a {
+    text-decoration: none;
+}
+
+/* ---------- TOPBAR ---------- */
+
+.topbar {
+
+    width: 1200px;
+
+    max-width: 95%;
+
+    margin: 20px auto;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    color: white;
+}
+
+.logout-btn {
+
+    color: white;
+
+    font-weight: bold;
+}
+
+/* ---------- MAIN CONTAINER ---------- */
+
+.container {
+
+    width: 1200px;
+
+    max-width: 95%;
+
+    margin: 20px auto;
+
+    background: white;
+
+    border-radius: 16px;
+
+    padding: 25px;
+
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+}
+
+/* ---------- GRID ---------- */
+
+.dashboard-grid {
+
+    display: grid;
+
+    grid-template-columns: 1.1fr 1.4fr 1fr;
+
+    gap: 20px;
+
+    align-items: stretch;
+}
+
+/* ---------- CARDS ---------- */
+
+.dashboard-card {
+
+    background: #f8fafc;
+
+    border-radius: 14px;
+
+    padding: 20px;
+
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+
+    height: 100%;
+
+    min-height: 500px;
+}
+
+/* ---------- FORM ---------- */
+
+.plan-form {
+
+    display: flex;
+
+    flex-direction: column;
+}
+
+.plan-form label {
+
+    font-weight: 600;
+
+    margin-top: 12px;
+
+    margin-bottom: 5px;
+}
+
+input,
+select {
+
+    width: 100%;
+
+    padding: 12px;
+
+    border: 1px solid #d1d5db;
+
+    border-radius: 8px;
+
+    box-sizing: border-box;
+}
+
+button {
+
+    margin-top: 15px;
+
+    border: none;
+
+    border-radius: 8px;
+
+    padding: 12px;
+
+    background: #667eea;
+
+    color: white;
+
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+button:hover {
+
+    background: #5a67d8;
+}
+
+/* ---------- STATS ---------- */
+
+.stats-grid {
+
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 12px;
+
+    margin-bottom: 20px;
+}
+
+.stat-card {
+
+    background: linear-gradient(
+        135deg,
+        #667eea,
+        #764ba2
+    );
+
+    color: white;
+
+    border-radius: 10px;
+
+    padding: 15px;
+
+    text-align: center;
+}
+
+.stat-number {
+
+    font-size: 28px;
+
+    font-weight: bold;
+}
+
+.stat-label {
+
+    font-size: 13px;
+
+    color: rgba(255,255,255,0.85);
+}
+
+/* ---------- CHART ---------- */
+
+.analytics-card canvas {
+
+    width: 100% !important;
+
+    height: 250px !important;
+}
+
+/* ---------- PLAN ---------- */
+
+.plan-section {
+
+    margin-top: 20px;
+
+    padding-top: 20px;
+
+    border-top: 1px solid #ddd;
+}
+
+.schedule-list {
+
+    margin-top: 15px;
+}
+
+.schedule-card {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    background: white;
+
+    padding: 14px;
+
+    border-radius: 8px;
+
+    margin-bottom: 10px;
+
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+}
+
+.schedule-card input {
+
+    width: auto;
+
+    margin: 0;
+}
+
+.schedule-text {
+
+    flex: 1;
+
+    font-weight: 600;
+}
+
+.schedule-card:hover{
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+/* ---------- PROGRESS ---------- */
+
+.progress-container {
+
+    height: 12px;
+
+    background: #e5e7eb;
+
+    border-radius: 50px;
+
+    overflow: hidden;
+
+    margin-top: 20px;
+}
+
+#progressBar{
+    background: linear-gradient(
+        90deg,
+        #667eea,
+        #764ba2
+    );
+}
+
+/* ---------- TIMER ---------- */
+
+.timer-container {
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    margin-top: 20px;
+}
+
+.timer-circle {
+
+    position: relative;
+
+    width: 220px;
+
+    height: 220px;
+}
+
+.timer-circle svg {
+
+    position: absolute;
+
+    inset: 0;
+}
+
+#timerDisplay {
+
+    position: absolute;
+
+    width: 100%;
+
+    text-align: center;
+
+    top: 85px;
+
+    font-size: 34px;
+
+    font-weight: bold;
+}
+
+.timer-controls {
+
+    position: absolute;
+
+    width: 100%;
+
+    top: 135px;
+
+    display: flex;
+
+    justify-content: center;
+
+    gap: 18px;
+}
+
+.timer-controls span {
+
+    cursor: pointer;
+
+    font-size: 22px;
+
+    transition: 0.2s;
+}
+
+.timer-controls span:hover {
+
+    transform: scale(1.2);
+}
+
+/* ---------- HISTORY ---------- */
+
+.history-section {
+
+    margin-top: 25px;
+
+    background: #f8fafc;
+
+    padding: 20px;
+
+    border-radius: 14px;
+}
+
+.history-table {
+
+    width: 100%;
+
+    border-collapse: collapse;
+
+    margin-top: 20px;
+}
+
+.history-table th {
+
+    background: #667eea;
+
+    color: white;
+
+    padding: 12px;
+}
+
+.history-table td {
+
+    padding: 12px;
+
+    text-align: center;
+
+    border-bottom: 1px solid #ddd;
+}
+
+.history-table tr:hover {
+
+    background: #eef2ff;
+}
+
+.history-table tr:nth-child(even) {
+
+    background: #f8fafc;
+}
+
+/* ---------- MOBILE ---------- */
+
+@media (max-width: 1000px) {
+
+    .dashboard-grid {
+
+        grid-template-columns: 1fr;
+    }
+
+    .container {
+
+        width: 95%;
+    }
+
+    .topbar {
+
+        width: 95%;
+    }
+}
+
+.timer-subtitle {
+
+    color: #666;
+
+    margin-bottom: 20px;
+
+    text-align: center;
+}
+
+.progress-container {
+
+    margin-top: 10px;
+
+    margin-bottom: 10px;
+}
+
+.profile-card {
+
+    background: linear-gradient(
+        135deg,
+        #667eea,
+        #764ba2
+    );
+
+    color: white;
+
+    padding: 15px;
+
+    border-radius: 12px;
+
+    margin-bottom: 20px;
+}

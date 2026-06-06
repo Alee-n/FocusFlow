@@ -1,4 +1,11 @@
-let totalTime = 20 * 60;
+const timerMinutes =
+    parseInt(
+        document
+            .getElementById("timerData")
+            .dataset
+            .minutes
+    );
+let totalTime = timerMinutes * 60;
 let timeLeft = totalTime;
 let timerInterval = null;
 

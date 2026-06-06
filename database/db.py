@@ -317,3 +317,24 @@ def get_session_chart_data(username):
     connection.close()
 
     return [row[0] for row in data]
+
+def get_user_streak(username):
+
+    connection = connect_db()
+
+    cursor = connection.cursor()
+
+    cursor.execute(
+        """
+        SELECT COUNT(*)
+        FROM sessions
+        WHERE username = %s
+        """,
+        (username,),
+    )
+
+    streak = cursor.fetchone()[0]
+
+    connection.close()
+
+    return streak
