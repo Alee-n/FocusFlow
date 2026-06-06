@@ -68,7 +68,12 @@ https://focusflow-6dz0.onrender.com
 
 ![Analytics](screenshots/history.png)
 
+### Focus Planner
+
+![FocusPlanner](screenshots\focus planner.png)
+
 ---
+
 ## Tech Stack
 
 ### Backend
