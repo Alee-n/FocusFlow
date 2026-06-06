@@ -62,7 +62,12 @@ def create_tables():
                    
     
     )
-    """)              
+    """)   
+
+    cursor.execute("""
+    ALTER TABLE sessions
+    ADD COLUMN IF NOT EXISTS session_date DATE
+    """)           
 
     connection.commit()
 
