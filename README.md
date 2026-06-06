@@ -204,11 +204,11 @@ on every push to the repository.
 
 ## Future Improvements
 
-* User registration system
-* Password hashing
-* Advanced analytics dashboard
-* AWS deployment
-* Expanded automated testing
+* Real streak tracking based on calendar dates
+* Email notifications and reminders
+* Team productivity analytics
+* Calendar integration
+* AI-powered schedule optimization
 
 ---
 

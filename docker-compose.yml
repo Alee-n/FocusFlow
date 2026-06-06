@@ -6,6 +6,9 @@ services:
 
     build: .
 
+    postgres:
+    image: postgres:17
+
     ports:
       - "5000:5000"
 
@@ -13,3 +16,4 @@ services:
       - .:/app
 
     restart: always
+

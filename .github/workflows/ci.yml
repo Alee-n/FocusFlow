@@ -27,4 +27,4 @@ jobs:
 
       - name: Verify Flask app imports
         run: |
-          python -c "from app import app; print('CI Passed')"
+            pytest
