@@ -21,6 +21,7 @@ app.register_blueprint(main)
 app.register_blueprint(auth)
 app.register_blueprint(api)
 
+create_tables()
+
 if __name__ == "__main__":
-    create_tables()
     app.run(debug=True)

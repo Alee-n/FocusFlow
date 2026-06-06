@@ -195,10 +195,8 @@ pytest
 The project uses GitHub Actions to automatically:
 
 * Install dependencies
-* Validate application imports
-* Run automated checks
-
-on every push to the repository.
+* Run automated tests with pytest
+* Verify application integrity on every push
 
 ---
 
