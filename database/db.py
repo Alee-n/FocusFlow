@@ -1,6 +1,7 @@
 import psycopg2
 import os
-
+from datetime import date
+from datetime import timedelta
 def connect_db():
 
     print("DB_HOST =", os.getenv("DB_HOST"))
@@ -43,21 +44,25 @@ def create_tables():
 
     # ---------- SESSIONS TABLE ----------
     cursor.execute("""
-        CREATE TABLE IF NOT EXISTS sessions (
+    CREATE TABLE IF NOT EXISTS sessions (
 
-            id SERIAL PRIMARY KEY,
+        id SERIAL PRIMARY KEY,
 
-            username TEXT,
+        username TEXT,
 
-            task TEXT,
+        task TEXT,
 
-            time INTEGER,
+        time INTEGER,
 
-            energy TEXT,
+        energy TEXT,
 
-            mode TEXT
-        )
-        """)
+        mode TEXT,
+
+        session_date DATE
+                   
+    
+    )
+    """)              
 
     connection.commit()
 
@@ -97,13 +102,27 @@ def save_session(username, task, time, energy, mode):
     cursor = connection.cursor()
 
     cursor.execute(
-        """
+    """
         INSERT INTO sessions
-        (username, task, time, energy, mode)
+        (
+            username,
+            task,
+            time,
+            energy,
+            mode,
+            session_date
+        )
 
-        VALUES (%s, %s, %s, %s, %s)
+        VALUES (%s, %s, %s, %s, %s, %s)
         """,
-        (username, task, time, energy, mode),
+        (
+            username,
+            task,
+            time,
+            energy,
+            mode,
+            date.today()
+        ),
     )
 
     connection.commit()
@@ -331,15 +350,41 @@ def get_user_streak(username):
 
     cursor.execute(
         """
-        SELECT COUNT(*)
+        SELECT DISTINCT session_date
         FROM sessions
         WHERE username = %s
+        ORDER BY session_date DESC
         """,
         (username,),
     )
 
-    streak = cursor.fetchone()[0]
+    dates = [row[0] for row in cursor.fetchall()]
 
     connection.close()
+
+    if not dates:
+        return 0
+
+    streak = 0
+
+    current_day = date.today()
+
+    for session_day in dates:
+
+        if session_day == current_day:
+
+            streak += 1
+
+            current_day -= timedelta(days=1)
+
+        elif session_day == current_day - timedelta(days=1):
+
+            streak += 1
+
+            current_day = session_day - timedelta(days=1)
+
+        else:
+
+            break
 
     return streak
