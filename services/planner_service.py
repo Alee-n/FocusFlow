@@ -1,3 +1,17 @@
+def format_duration(total_minutes):
+
+    hours = total_minutes // 60
+
+    minutes = total_minutes % 60
+
+    if hours == 0:
+        return f"{minutes} mins"
+
+    if minutes == 0:
+        return f"{hours} hr"
+
+    return f"{hours} hr {minutes} mins"
+
 def generate_plan(task, time, energy, mode):
 
     time = int(time)
@@ -6,13 +20,10 @@ def generate_plan(task, time, energy, mode):
 
     result["task"] = task.capitalize()
 
-    if mode == "ai":
-        result["score"] = "AI"
-
-    else:
-        result["score"] = "Smart"
+    result["score"] = "AI" if mode == "ai" else "Smart"
 
     # ---------- MOTIVATION ----------
+
     if energy == "low":
         motivation = "Start small. Even 5 minutes matters."
 
@@ -24,50 +35,76 @@ def generate_plan(task, time, energy, mode):
 
     result["motivation"] = motivation
 
-    # ---------- PLAN GENERATION ----------
+    # ---------- ACTIVITY POOLS ----------
+
+    study_activities = [
+        "Deep Study",
+        "Revision",
+        "Practice Questions",
+        "Recall Session",
+        "Mock Test",
+        "Problem Solving",
+        "Concept Review",
+        "Active Recall",
+        "Previous Questions",
+        "Topic Reinforcement"
+    ]
+
+    work_activities = [
+        "Deep Work",
+        "Planning",
+        "Execution",
+        "Review",
+        "Optimization",
+        "Documentation",
+        "Research",
+        "Implementation",
+        "Testing",
+        "Wrap Up"
+    ]
+
     plan = []
+
+    remaining = time
+
+    index = 0
 
     if task == "study":
 
-        if time >= 120:
-
-            plan = [
-                "25 mins Deep Study",
-                "5 mins Break",
-                "25 mins Revision",
-                "10 mins Practice Questions",
-                "20 mins Recall Session",
-                "5 mins Break",
-                "30 mins Mock Test",
-            ]
-
-        elif time >= 60:
-
-            plan = ["25 mins Study", "5 mins Break", "25 mins Revision"]
-
-        else:
-
-            plan = ["20 mins Focus Study", "5 mins Quick Revision"]
+        activities = study_activities
 
     else:
 
-        if time >= 120:
+        activities = work_activities
 
-            plan = [
-                "30 mins Deep Work",
-                "10 mins Planning",
-                "30 mins Execution",
-                "10 mins Review",
-                "20 mins Optimization",
-            ]
+    # ---------- PLAN GENERATION ----------
 
-        elif time >= 60:
+    while remaining > 0:
 
-            plan = ["25 mins Work Sprint", "5 mins Break", "25 mins Task Completion"]
+        if energy == "low":
+            focus_block = 20
+
+        elif energy == "medium":
+            focus_block = 25
 
         else:
+            focus_block = 30
 
-            plan = ["20 mins Focus Work", "10 mins Wrap Up"]
+        session_time = min(focus_block, remaining)
+
+        plan.append(
+            f"{session_time} mins {activities[index % len(activities)]}"
+        )
+
+        remaining -= session_time
+
+        if remaining >= 5:
+
+            plan.append("5 mins Break")
+
+            remaining -= 5
+
+        index += 1
 
     result["plan"] = plan
 

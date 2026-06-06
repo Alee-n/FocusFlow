@@ -6,6 +6,7 @@ from flask import redirect
 import csv
 from flask import Response
 from services.planner_service import generate_plan
+from services.planner_service import format_duration
 from database.db import get_session_chart_data
 from database.db import save_session
 from database.db import get_user_total_sessions
@@ -33,7 +34,11 @@ def home():
 
         task = request.form["task"]
 
-        time = request.form["time"]
+        hours = int(request.form["hours"])
+
+        minutes = int(request.form["minutes"])
+
+        time = (hours * 60) + minutes
 
         energy = request.form["energy"]
 
@@ -47,7 +52,11 @@ def home():
 
     focus_time = get_total_focus_time(username)
 
+    focus_time_display = format_duration(focus_time)
+
     average_time = get_average_session_time(username)
+
+    average_time_display = format_duration(int(average_time))
 
     common_energy = get_most_common_energy(username)
 
@@ -71,7 +80,9 @@ def home():
         username=username,
         streak=streak,
         focus_time=focus_time,
+        focus_time_display=focus_time_display,
         average_time=average_time,
+        average_time_display=average_time_display,
         common_energy=common_energy,
         common_mode=common_mode,
     )

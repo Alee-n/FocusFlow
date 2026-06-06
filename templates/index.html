@@ -44,8 +44,21 @@
                         <option value="work">Work</option>
                     </select>
         
-                    <label>Available Time (minutes):</label><br>
-                    <input type="number" name="time" required>
+                    <label>Available Time:</label><br>
+                    <input
+                        type="number"
+                        name="hours"
+                        min="0"
+                        placeholder="Hours"
+                        value="0">
+
+                    <input
+                        type="number"
+                        name="minutes"
+                        min="0"
+                        max="59"
+                        placeholder="Minutes"
+                        value="0">
         
                     <label>Energy Level:</label><br>
                     <select name="energy">
@@ -148,12 +161,12 @@
                     </div>
         
                     <div class="stat-card">
-                        <div class="stat-number">{{ focus_time }}</div>
-                        <div class="stat-label">Minutes</div>
+                        <div class="stat-number">{{ focus_time_display }}</div>
+                        <div class="stat-label">Focus Time</div>
                     </div>
         
                     <div class="stat-card">
-                        <div class="stat-number">{{ average_time }}</div>
+                        <div class="stat-number">{{ average_time_display }}</div>
                         <div class="stat-label">Average</div>
                     </div>
         
@@ -279,7 +292,13 @@
 
                     <td>{{ item[0] }}</td>
 
-                    <td>{{ item[1] }}</td>
+                    <td>
+                        {% if item[1] >= 60 %}
+                            {{ item[1] // 60 }}h {{ item[1] % 60 }}m
+                        {% else %}
+                            {{ item[1] }}m
+                        {% endif %}
+                    </td>
 
                     <td>{{ item[2] }}</td>
 
@@ -294,6 +313,8 @@
         </div>
         
     </div>
+
+    <script src="{{ url_for('static', filename='js/progress.js') }}"></script>
 
     <script src="{{ url_for('static', filename='js/timer.js') }}"></script>
 

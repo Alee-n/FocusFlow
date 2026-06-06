@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             datasets: [{
 
-                label: "Focus Minutes",
+                label: "Focus Time (Minutes)",
 
                 data: chartData,
 
