@@ -20,6 +20,9 @@ https://focusflow-6dz0.onrender.com
 * Time-based task planning
 * Energy-aware recommendations
 * Adaptive planning modes
+* Dynamic schedule generation based on available time
+* Pomodoro-style focus sessions
+* Progress tracking and completion analytics
 
 ### Backend Engineering
 
@@ -31,6 +34,7 @@ https://focusflow-6dz0.onrender.com
 ### Security
 
 * JWT authentication
+* Password hashing with Werkzeug Security
 * Protected API routes
 * Role-Based Access Control (RBAC)
 
@@ -44,6 +48,7 @@ https://focusflow-6dz0.onrender.com
 ### Quality
 
 * Automated API testing with pytest
+* Planner service unit testing
 * Modular service architecture
 * Production-oriented project structure
 
@@ -89,22 +94,49 @@ https://focusflow-6dz0.onrender.com
 
 ---
 
+## Architecture
+
+User
+↓
+Flask Routes
+↓
+Planner Service
+↓
+PostgreSQL Database
+↓
+Analytics Dashboard
+
+Authentication is handled using JWT and password hashing.
+
 ## Project Structure
 
 ```text
 FocusFlow/
 ├── app.py
-├── routes/
-├── services/
 ├── database/
-├── templates/
+│   └── db.py
+├── routes/
+│   ├── api_routes.py
+│   ├── auth_routes.py
+│   └── main_routes.py
+├── services/
+│   └── planner_service.py
 ├── static/
+│   ├── css/
+│   └── js/
+├── templates/
+│   ├── index.html
+│   ├── login.html
+│   └── register.html
 ├── tests/
+│   ├── test_api.py
+│   └── test_planner.py
 ├── docs/
-├── .github/workflows/
+│   └── API.md
 ├── Dockerfile
 ├── docker-compose.yml
-└── requirements.txt
+├── requirements.txt
+└── README.md
 ```
 
 ---
@@ -188,7 +220,13 @@ http://127.0.0.1:5000
 pytest
 ```
 
----
+Current test coverage includes:
+
+- Health API endpoint
+- JWT authentication endpoints
+- Planner service generation
+- Duration formatting utilities
+- Protected route validation
 
 ## CI/CD
 
@@ -202,7 +240,6 @@ The project uses GitHub Actions to automatically:
 
 ## Future Improvements
 
-* Real streak tracking based on calendar dates
 * Email notifications and reminders
 * Team productivity analytics
 * Calendar integration

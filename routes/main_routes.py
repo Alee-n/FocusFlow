@@ -66,7 +66,7 @@ def home():
 
     chart_data = get_session_chart_data(username)
 
-    streak = get_user_streak(username)
+    streak = 0
 
     percent = 0
 
