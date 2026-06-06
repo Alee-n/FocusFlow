@@ -4,11 +4,6 @@ from datetime import date
 from datetime import timedelta
 def connect_db():
 
-    print("DB_HOST =", os.getenv("DB_HOST"))
-    print("DB_NAME =", os.getenv("DB_NAME"))
-    print("DB_USER =", os.getenv("DB_USER"))
-    print("DB_PORT =", os.getenv("DB_PORT"))
-
     connection = psycopg2.connect(
         host=os.getenv("DB_HOST"),
         database=os.getenv("DB_NAME"),
@@ -358,6 +353,7 @@ def get_user_streak(username):
         SELECT DISTINCT session_date
         FROM sessions
         WHERE username = %s
+        AND session_date IS NOT NULL
         ORDER BY session_date DESC
         """,
         (username,),
