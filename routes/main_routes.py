@@ -46,7 +46,15 @@ def home():
 
         result = generate_plan(task, time, energy, mode)
 
-        save_session(username, task, time, energy, mode)
+        try:
+
+            save_session(username, task, time, energy, mode)
+
+        except Exception as e:
+
+            print("SAVE SESSION ERROR:", e)
+
+            raise
 
     total = get_user_total_sessions(username)
 
