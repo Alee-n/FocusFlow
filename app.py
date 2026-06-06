@@ -21,7 +21,11 @@ app.register_blueprint(main)
 app.register_blueprint(auth)
 app.register_blueprint(api)
 
-create_tables()
+if os.getenv("DB_HOST"):
+    try:
+        create_tables()
+    except Exception:
+        pass
 
 if __name__ == "__main__":
     app.run(debug=True)
