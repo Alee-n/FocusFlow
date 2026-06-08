@@ -5,28 +5,93 @@ const timerMinutes =
             .dataset
             .minutes
     );
-let totalTime = timerMinutes * 60;
+
+const focusMinutes = timerMinutes;
+const breakMinutes = 5;
+
+let totalTime = focusMinutes * 60;
 let timeLeft = totalTime;
 let timerInterval = null;
+let isBreak = false;
+
+function playSound() {
+
+    const audioContext =
+        new (window.AudioContext ||
+             window.webkitAudioContext)();
+
+    const oscillator =
+        audioContext.createOscillator();
+
+    oscillator.type = "sine";
+
+    oscillator.frequency.value = 880;
+
+    oscillator.connect(
+        audioContext.destination
+    );
+
+    oscillator.start();
+
+    setTimeout(() => {
+
+        oscillator.stop();
+
+    }, 400);
+}
+
+function updateModeText() {
+
+    document.getElementById("timerMode")
+        .innerText =
+            isBreak
+                ? "☕ Break Session"
+                : "🎯 Focus Session";
+}
+
+function updateCircleColor() {
+
+    const circle =
+        document.getElementById("progressCircle");
+
+    if (isBreak) {
+
+        circle.setAttribute(
+            "stroke",
+            "#4caf50"
+        );
+
+    } else {
+
+        circle.setAttribute(
+            "stroke",
+            "#5c6bc0"
+        );
+    }
+}
 
 function updateTimerDisplay() {
 
     let min = Math.floor(timeLeft / 60);
+
     let sec = timeLeft % 60;
 
-    document.getElementById("timerDisplay").innerText =
-        `${min}:${sec < 10 ? "0" : ""}${sec}`;
+    document.getElementById("timerDisplay")
+        .innerText =
+            `${min}:${sec < 10 ? "0" : ""}${sec}`;
 
     let progress =
         597 - (597 * timeLeft / totalTime);
 
     document.getElementById("progressCircle")
-        .style.strokeDashoffset = progress;
+        .style.strokeDashoffset =
+            progress;
 }
 
 function startTimer() {
 
     if (timerInterval) {
+
         return;
     }
 
@@ -38,7 +103,40 @@ function startTimer() {
 
             timerInterval = null;
 
-            alert("🎉 Focus Session Complete!");
+            playSound();
+
+            if (!isBreak) {
+
+                alert("☕ Break Time! 5 Minutes");
+
+                isBreak = true;
+
+                totalTime =
+                    breakMinutes * 60;
+
+                timeLeft =
+                    totalTime;
+
+            } else {
+
+                alert("🚀 Back To Work!");
+
+                isBreak = false;
+
+                totalTime =
+                    focusMinutes * 60;
+
+                timeLeft =
+                    totalTime;
+            }
+
+            updateModeText();
+
+            updateCircleColor();
+
+            updateTimerDisplay();
+
+            startTimer();
 
             return;
         }
@@ -63,12 +161,30 @@ function resetTimer() {
 
     timerInterval = null;
 
+    if (isBreak) {
+
+        totalTime =
+            breakMinutes * 60;
+
+    } else {
+
+        totalTime =
+            focusMinutes * 60;
+    }
+
     timeLeft = totalTime;
 
     updateTimerDisplay();
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener(
+    "DOMContentLoaded",
+    () => {
 
-    updateTimerDisplay();
-});
+        updateModeText();
+
+        updateCircleColor();
+
+        updateTimerDisplay();
+    }
+);
